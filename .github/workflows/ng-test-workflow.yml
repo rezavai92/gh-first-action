@@ -13,8 +13,8 @@ jobs:
         with:
           node-version: 18.19.1
       - name: Install dependencies
-        working-directory: gh-first-action
+        working-directory: ng-github-action-demo
         run: npm ci
       - name: Run Tests
-        working-directory: gh-first-action
+        working-directory: ng-github-action-demo
         run: npm run test
