@@ -12,11 +12,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.19.1
-      - name: Install Chrome dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libnss3 libgconf-2-4 libxss1 libasound2 \
-              libxshmfence1 libgbm-dev libgtk-3-0 libx11-xcb1
       - name: Install dependencies
         working-directory: ng-github-action-demo
         run: npm ci
