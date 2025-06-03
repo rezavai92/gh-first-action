@@ -1,0 +1,37 @@
+name: Angular Test Workflow
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Install NodeJs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.19.1
+      - name: Install dependencies
+        working-directory: ng-github-action-demo
+        run: npm ci
+      - name: Run Tests
+        working-directory: ng-github-action-demo
+        run: npm run test-headless
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Install NodeJs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.19.1
+      - name: Install dependencies
+        working-directory: ng-github-action-demo
+        run: npm ci
+      - name: build project
+        working-directory: ng-github-action-demo
+        run: npm run build
+      - name: deploy
+        run: echo "deploying...."
