@@ -52,9 +52,13 @@ jobs:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
-      - run: echo "Token length ${#SONAR_TOKEN}"
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonarqube \
+          -Dsonar.organization=your_org_key \
+          -Dsonar.projectKey=your_project_key \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=$SONAR_TOKEN
 
   build:
     needs: sonarqube
