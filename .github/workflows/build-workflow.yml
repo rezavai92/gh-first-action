@@ -54,9 +54,7 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          ./gradlew sonarqube \
-            -Dsonar.login=$SONAR_TOKEN
+      - run: echo "Token length ${#SONAR_TOKEN}"
 
   build:
     needs: sonarqube
