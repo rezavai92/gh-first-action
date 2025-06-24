@@ -52,7 +52,9 @@ jobs:
         working-directory: ng-github-action-demo
         run: npm run test-headless
       - name: test secret
-        run: echo "Printing ${{secrets.TEST}}"
+        env:
+          TEST: ${{ secrets.TEST }}
+        run: echo "Printing $TEST"
 
   sonarqube:
     needs: test
