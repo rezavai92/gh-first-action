@@ -19,6 +19,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.19.1
+      - name: Cache dependencies
+        uses: actions/checkout@v4
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         working-directory: ng-github-action-demo
         run: npm ci
@@ -35,6 +40,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.19.1
+      - name: Cache dependencies
+        uses: actions/checkout@v4
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         working-directory: ng-github-action-demo
         run: npm ci
@@ -66,6 +76,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.19.1
+      - name: Cache dependencies
+        uses: actions/checkout@v4
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install depenencies
         working-directory: ng-github-action-demo
         run: npm ci
