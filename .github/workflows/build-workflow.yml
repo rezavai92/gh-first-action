@@ -31,6 +31,7 @@ jobs:
         working-directory: ng-github-action-demo
         run: npm run lint
   test:
+    environment: staging
     needs: lint
     runs-on: ubuntu-latest
     steps:
