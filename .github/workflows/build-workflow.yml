@@ -28,7 +28,6 @@ jobs:
         working-directory: ng-github-action-demo
         run: npm run lint
   test:
-    environment: staging
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -49,10 +48,6 @@ jobs:
       - name: Run Tests
         working-directory: ng-github-action-demo
         run: npm run test-headless
-      - name: test secret
-        env:
-          TEST: ${{ secrets.TEST }}
-        run: echo "Printing $TEST"
 
   sonarqube:
     needs: test
@@ -96,6 +91,7 @@ jobs:
           path: ng-github-action-demo/dist
 
   deploy:
+    environment: staging
     needs: build
     runs-on: ubuntu-latest
     steps:
