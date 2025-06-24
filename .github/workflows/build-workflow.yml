@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -14,6 +15,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.19.1
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         working-directory: ng-github-action-demo
         run: npm ci
@@ -21,6 +27,7 @@ jobs:
         working-directory: ng-github-action-demo
         run: npm run lint
   test:
+    environment: staging
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -30,14 +37,38 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.19.1
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         working-directory: ng-github-action-demo
         run: npm ci
       - name: Run Tests
         working-directory: ng-github-action-demo
         run: npm run test-headless
-  deploy:
+      - name: test secret
+        env:
+          TEST: ${{ secrets.TEST }}
+        run: echo "Printing $TEST"
+
+  sonarqube:
     needs: test
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - run: echo "Token length ${#SONAR_TOKEN}"
+
+  build:
+    needs: sonarqube
     runs-on: ubuntu-latest
     steps:
       - name: Get code
@@ -46,11 +77,33 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.19.1
-      - name: Install dependencies
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install depenencies
         working-directory: ng-github-action-demo
         run: npm ci
       - name: build project
         working-directory: ng-github-action-demo
         run: npm run build
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: ng-github-action-demo/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: ng-github-action-demo/dist
+      - name: Output contents
+        run: ls
       - name: deploy
         run: echo "deploying...."
