@@ -78,8 +78,6 @@ jobs:
         with:
           path: ~/.npm
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Install Netlify
-        run: npm install netlify-cli@17.10.1 -g
       - name: Install depenencies
         working-directory: ng-github-action-demo
         run: npm ci
@@ -105,6 +103,7 @@ jobs:
       - name: Deploy to Netlify
         id: netlify_deploy
         run: |
+          npm install netlify-cli@17.10.1 -g
           netlify deploy \
             --dir dist \
             --site ${{ secrets.NETLIFY_SITE_ID }} \
