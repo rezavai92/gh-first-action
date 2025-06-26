@@ -101,7 +101,7 @@ jobs:
           name: dist-files
           path: ng-github-action-demo/dist
       - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3.0
+        uses: nwtgck/actions-netlify@v2.0.0
         with:
           publish-dir: "ng-github-action-demo/dist"
           production-branch: main
