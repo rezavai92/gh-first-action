@@ -78,6 +78,8 @@ jobs:
         with:
           path: ~/.npm
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install Netlify
+        run: npm install netlify-cli@17.10.1 -g
       - name: Install depenencies
         working-directory: ng-github-action-demo
         run: npm ci
@@ -101,18 +103,12 @@ jobs:
           name: dist-files
           path: ng-github-action-demo/dist
       - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3.0.0
-        with:
-          publish-dir: "ng-github-action-demo/dist"
-          production-branch: main
-          deploy-message: "Deploy from GitHub Actions"
-          enable-pull-request-comment: false
-          enable-commit-comment: true
-          overwrites-pull-request-comment: true
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 1
+        id: netlify_deploy
+        run: |
+          netlify deploy \
+            --dir dist \
+            --site ${{ secrets.NETLIFY_SITE_ID }} \
+            --auth ${{ secrets.NETLIFY_API_TOKEN }}
       - name: Output contents
         run: ls
       - name: deploy
