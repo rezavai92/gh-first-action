@@ -62,7 +62,6 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - run: echo "Token length ${#SONAR_TOKEN}"
-
   build:
     needs: sonarqube
     runs-on: ubuntu-latest
